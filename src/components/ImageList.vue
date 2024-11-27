@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="text-lg font-semibold" :class="isDarkMode ? 'text-white' : 'text-gray-900'">
+    <div class="flex items-center justify-between mb-3 sm:mb-4">
+      <h3 class="text-base sm:text-lg font-semibold" :class="isDarkMode ? 'text-white' : 'text-gray-900'">
         图片列表
       </h3>
       <div class="flex space-x-2">
         <button
-          @click="$emit('removeAll')"
+          @click="$emit('clearAll')"
           :disabled="!hasImages"
           :class="[
-            'px-2 py-1 rounded text-sm transition-colors',
+            'px-2 py-1 rounded text-xs sm:text-sm transition-colors',
             isDarkMode
               ? 'bg-red-600 hover:bg-red-700 text-white disabled:bg-red-800'
               : 'bg-red-500 hover:bg-red-600 text-white disabled:bg-red-300'
@@ -21,12 +21,12 @@
     </div>
 
     <div class="flex-1 overflow-auto min-h-0">
-      <div v-if="hasImages" class="space-y-2">
+      <div v-if="hasImages" class="space-y-1.5 sm:space-y-2">
         <div
           v-for="(img, index) in images"
           :key="img.id"
           :class="[
-            'group p-2 rounded flex items-center space-x-2 cursor-pointer transition-colors',
+            'group p-1.5 sm:p-2 rounded flex items-center space-x-2 cursor-pointer transition-colors',
             currentIndex === index
               ? isDarkMode
                 ? 'bg-gray-700'
@@ -38,7 +38,7 @@
           @click="$emit('select', index)"
         >
           <!-- 缩略图 -->
-          <div class="w-12 h-12 shrink-0">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
             <img
               :src="img.src"
               :alt="img.name"
@@ -51,7 +51,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center space-x-2">
               <span
-                class="text-sm font-medium truncate"
+                class="text-xs sm:text-sm font-medium truncate"
                 :class="isDarkMode ? 'text-white' : 'text-gray-900'"
               >
                 {{ img.name }}
@@ -66,7 +66,7 @@
           <!-- 操作按钮 -->
           <button
             @click.stop="$emit('remove', index)"
-            class="p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            class="p-1 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
             :class="isDarkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'"
           >
             <svg
@@ -115,7 +115,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['select', 'remove', 'removeAll']);
+const emit = defineEmits(['select', 'remove', 'clearAll']);
 
 const hasImages = computed(() => props.images.length > 0);
 

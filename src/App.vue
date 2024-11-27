@@ -13,9 +13,9 @@
       </div>
 
       <!-- 主要内容 -->
-      <div class="grid grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
         <!-- 左侧面板 -->
-        <div class="col-span-1 flex flex-col h-[calc(100vh-8rem)]">
+        <div class="md:col-span-1 flex flex-col h-auto md:h-[calc(100vh-8rem)]">
           <!-- 图片上传区域 -->
           <div :class="['p-3 rounded-lg border-2 border-dashed transition-colors mb-3', isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-gray-600' : 'bg-white border-gray-300 hover:border-blue-500']" @drop.prevent="handleFileDrop" @dragover.prevent>
             <div class="space-y-1">
@@ -46,22 +46,22 @@
           <!-- 图片列表 -->
           <div :class="['flex-1 p-3 rounded-lg border transition-colors overflow-hidden flex flex-col', isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200']">
             <div class="flex-1 overflow-auto">
-              <ImageList :images="originalImages" :current-index="currentImageIndex" :is-dark-mode="isDarkMode" @select="selectImage" @remove="removeImage" />
+              <ImageList :images="originalImages" :current-index="currentImageIndex" :is-dark-mode="isDarkMode" @select="selectImage" @remove="removeImage" @clearAll="removeAllImages" />
             </div>
           </div>
         </div>
 
         <!-- 右侧内容：切片预览 -->
-        <div class="col-span-3">
-          <div :class="['p-4 rounded-lg border transition-colors min-h-[calc(100vh-8rem)]', isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200']">
+        <div class="md:col-span-3">
+          <div :class="['p-2 md:p-4 rounded-lg border transition-colors min-h-[50vh] md:min-h-[calc(100vh-8rem)]', isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200']">
             <div class="space-y-4">
-              <div class="flex items-center justify-between">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <h3 class="text-lg font-semibold" :class="isDarkMode ? 'text-white' : 'text-gray-900'">切片预览</h3>
-                <button v-if="pieces.length > 0" @click="exportAllImages" :disabled="isLoading" :class="['px-4 py-2 rounded transition-colors', isDarkMode ? 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-blue-800' : 'bg-blue-500 hover:bg-blue-600 text-white disabled:bg-blue-300']">导出切片</button>
+                <button v-if="pieces.length > 0" @click="exportAllImages" :disabled="isLoading" :class="['w-full sm:w-auto px-4 py-2 rounded transition-colors', isDarkMode ? 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-blue-800' : 'bg-blue-500 hover:bg-blue-600 text-white disabled:bg-blue-300']">导出切片</button>
               </div>
 
               <div v-if="pieces.length > 0" class="relative">
-                <div class="grid gap-1" :style="{ gridTemplateColumns: `repeat(${gridX}, minmax(0, 1fr))` }">
+                <div class="grid gap-1" :style="{ gridTemplateColumns: `repeat(${Math.min(gridX, 4)}, minmax(0, 1fr))` }">
                   <div v-for="piece in pieces" :key="piece.id" class="relative aspect-square group overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-shadow">
                     <img :src="piece.src" :alt="piece.name" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                   </div>
