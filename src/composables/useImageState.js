@@ -33,14 +33,22 @@ export function useImageState() {
           continue;
         }
 
+        // 检查是否存在同名图片
+        const existingImage = originalImages.value.find(img => img.name === file.name);
+        if (existingImage) {
+          error.value = `已存在同名图片: ${file.name}`;
+          continue;
+        }
+
         const processedImage = await processImage(file, processingOptions.value);
         if (processedImage) {
+          processedImage.size = file.size; // 保存原始文件大小
           originalImages.value.push(processedImage);
         }
       }
 
       // 如果是第一次上传，自动显示第一张图片的切片
-      if (originalImages.value.length === files.length) {
+      if (originalImages.value.length && currentImageIndex.value === 0) {
         await updatePieces(3, 3);
       }
     } catch (err) {

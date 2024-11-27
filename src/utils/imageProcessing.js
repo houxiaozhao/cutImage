@@ -63,6 +63,7 @@ export async function processImage(file, options = {}) {
         width,
         height,
         name: file.name,
+        size: file.size, // 添加原始文件大小
         id: Date.now()
       });
     };

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <div class="flex items-center justify-between mb-3 sm:mb-4">
-      <h3 class="text-base sm:text-lg font-semibold" :class="isDarkMode ? 'text-white' : 'text-gray-900'">
+      <h3 class="text-base sm:text-lg font-semibold transition-colors duration-300" :class="isDarkMode ? 'text-white' : 'text-gray-900'">
         图片列表
       </h3>
       <div class="flex space-x-2">
@@ -9,7 +9,7 @@
           @click="$emit('clearAll')"
           :disabled="!hasImages"
           :class="[
-            'px-2 py-1 rounded text-xs sm:text-sm transition-colors',
+            'px-2 py-1 rounded text-xs sm:text-sm transition-all duration-300 transform hover:scale-105 shadow-sm',
             isDarkMode
               ? 'bg-red-600 hover:bg-red-700 text-white disabled:bg-red-800'
               : 'bg-red-500 hover:bg-red-600 text-white disabled:bg-red-300'
@@ -20,17 +20,17 @@
       </div>
     </div>
 
-    <div class="flex-1 overflow-auto min-h-0">
+    <div class="flex-1 overflow-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500">
       <div v-if="hasImages" class="space-y-1.5 sm:space-y-2">
         <div
           v-for="(img, index) in images"
           :key="img.id"
           :class="[
-            'group p-1.5 sm:p-2 rounded flex items-center space-x-2 cursor-pointer transition-colors',
+            'group p-1.5 sm:p-2 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300 transform hover:translate-x-1 shadow-sm hover:shadow-md animate-slideIn',
             currentIndex === index
               ? isDarkMode
-                ? 'bg-gray-700'
-                : 'bg-blue-50'
+                ? 'bg-gray-700 shadow-md'
+                : 'bg-blue-50 shadow-md'
               : isDarkMode
               ? 'hover:bg-gray-800'
               : 'hover:bg-gray-50'
@@ -38,11 +38,11 @@
           @click="$emit('select', index)"
         >
           <!-- 缩略图 -->
-          <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-lg overflow-hidden shadow-sm transition-transform duration-300 group-hover:scale-105">
             <img
               :src="img.src"
               :alt="img.name"
-              class="w-full h-full object-cover rounded"
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               @load="updateImageDimensions(img, $event)"
             />
           </div>
@@ -51,13 +51,13 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center space-x-2">
               <span
-                class="text-xs sm:text-sm font-medium truncate"
+                class="text-xs sm:text-sm font-medium truncate transition-colors duration-300"
                 :class="isDarkMode ? 'text-white' : 'text-gray-900'"
               >
                 {{ img.name }}
               </span>
             </div>
-            <div class="text-xs" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+            <div class="text-xs transition-colors duration-300" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
               {{ formatSize(img.size) }} |
               {{ img.width }}x{{ img.height }}
             </div>
@@ -66,7 +66,7 @@
           <!-- 操作按钮 -->
           <button
             @click.stop="$emit('remove', index)"
-            class="p-1 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+            class="p-1 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform hover:scale-110 hover:rotate-90"
             :class="isDarkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'"
           >
             <svg
@@ -88,7 +88,7 @@
       </div>
       <div
         v-else
-        class="h-full flex items-center justify-center"
+        class="h-full flex items-center justify-center transition-colors duration-300"
         :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
       >
         暂无图片
@@ -136,3 +136,39 @@ const updateImageDimensions = (img, event) => {
   }
 };
 </script>
+
+<style>
+/* 自定义滚动条样式 */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: currentColor;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: currentColor;
+}
+
+/* 添加列表项动画 */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+</style>
